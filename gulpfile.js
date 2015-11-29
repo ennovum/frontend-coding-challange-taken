@@ -30,6 +30,8 @@ var LessPluginCleanCSS = require("less-plugin-clean-css");
 var cleancss = new LessPluginCleanCSS({ advanced: true, verbose: true, debug: true });
 var compress = true;
 var replace = require("gulp-replace");
+var http = require("http");
+var serveStatic = require("serve-static");
 
 var argv = parseargs(process.argv.slice(2));
 
@@ -64,10 +66,10 @@ var options = {
 	uglify: {
 		compress: {
 			drop_console: true,
-			sequences: true, // join consecutive statemets with the “comma operator”
+			sequences: true, // join consecutive statemets with the ?comma operator?
 			properties: true, // optimize property access: a["foo"] ? a.foo
 			dead_code: true, // discard unreachable code
-			drop_debugger: true, // discard “debugger” statements
+			drop_debugger: true, // discard ?debugger? statements
 			unsafe: false, // some unsafe optimizations (see below)
 			conditionals: true, // optimize if-s and conditional expressions
 			comparisons: true, // optimize comparisons
@@ -149,7 +151,7 @@ var lists = {
 // Only build specific themes if the command line --themes is provided
 if (argv.themes) {
 	var themelist = argv.themes.split(",");
-	
+
 	lists.css.build = [];
 	for (var u = 0; u < themelist.length; u++)
 		lists.css.build.push("less/themes/" + themelist[u] + "*.less");
@@ -159,7 +161,7 @@ if (argv.themes) {
 function buildPathArray(prefix, paths) {
 	var list = [];
 	prefix = prefix || "";
-	
+
 	for (var u = 0; u < paths.length; u++)
 		list.push(prefix + paths[u]);
 
@@ -178,14 +180,14 @@ gulp.task("commithash", function(callback) {
 	githash = "12345";
 	callback();
 });
-    
+
 // Set the build output to be uncompressed and unminified
 gulp.task("uncompressed", function() {
 	compress = false;
 	options.browserify.debug = false;
 });
 
-// Clean copied source directories          
+// Clean copied source directories
 gulp.task("clean-source", function(callback) {
 	del([
 		paths.build.source
@@ -255,7 +257,7 @@ gulp.task("css", function() {
 	return gulp.src(buildPathArray(paths.build.source, lists.css.build))
 		.pipe(foreach(function(stream, file) {
 			var basename = path.basename(file.path, ".less");
-			
+
 			return gulp.src(buildPathArray(paths.build.source, lists.css.master))
 				.pipe(inject.after("//import \"theme.less\";", "\n@import \"themes/" + basename + "\";"))
 				.pipe(sourcemaps.init({ loadMaps: true, debug: true }))
@@ -287,10 +289,10 @@ gulp.task("apps-partials", function() {
 				var pathArray = file.path.split("\\");
 			else
 				var pathArray = file.path.split("/");
-			
+
 			pathArray.pop();
 			var basename = pathArray.pop();
-			
+
 			return gulp.src(file.path + "/**/*.html")
 				.pipe(minifyhtml(options.minifiy))
 				.pipe(ngtemplates({
@@ -317,7 +319,7 @@ gulp.task("apps-scripts", ["apps-partials"], function() {
 
 			pathArray.pop();
 			var basename = pathArray.pop();
-			
+
 			var bundler = new browserify(options.browserify);
 			bundler.add(file.path);
 			bundler.external("moment");
@@ -351,11 +353,21 @@ gulp.task("main-scripts", function() {
 		.pipe(gulp.dest(paths.build.target + "js/"));
 });
 
+// Dev server
+gulp.task("serve", function (done) {
+	var serve = serveStatic(__dirname, {'index': ['index.html']})
+	var server = http.createServer(function (req, res) {
+		serve(req, res, function () {});
+	});
+
+	server.listen(3000);
+});
+
 
 // Main release build chain
 gulp.task("build", gulpsync.sync(["commithash", "copyfrom", "css", "html", ["main-scripts", "apps-scripts"], "copyto"], "sync release"));
 // Uncompressed release build chain
-gulp.task("dev", gulpsync.sync(["uncompressed", "build"], "sync dev"));
+gulp.task("dev", gulpsync.sync(["uncompressed", "build", ["serve", "watch"]], "sync dev"));
 // Default release build chain with clean
 gulp.task("clean-build", gulpsync.sync(["clean-all", "build"], "sync default"));
 // Font creation build chain
