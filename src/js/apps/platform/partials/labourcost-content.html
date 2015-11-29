@@ -1,13 +1,47 @@
 <div ng-controller="ctrlLabourCost">
 	<h2>Labour cost report</h2>
-	
+
 	<div class="list-table">
-		<div class="header-row">
+		<!-- <div class="header-row">
 			<div class="col-25">Example heading</div>
 		</div>
-		
+
 		<div class="body-row">
 			<div class="col-25">Example data entry</div>
-		</div>
+		</div> -->
+
+		<table class="matrix-table">
+			<thead>
+				<tr>
+					<th>Payroll Provider</th>
+					<th>Worker</th>
+					<th>Compliance Score</th>
+					<th>Gross Pay (&pound;)</th>
+					<th>Payroll Admin (&pound;)</th>
+					<th>Labour Cost (&pound;)</th>
+					<th>Work-force</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="provider in costReport.providers">
+					<th class="minor">{{provider.name}}</th>
+					<td>{{provider.workerCount}}</td>
+					<td class="percentage">{{provider.compliancePercent | percentage}}</td>
+					<td>
+						<span ng-if="provider.grossPayTotal">{{provider.grossPayTotal | currency:'':0}}</span>
+						<span ng-if="!provider.grossPayTotal">-</span>
+					</td>
+					<td>
+						<span ng-if="provider.payrollAdminTotal">{{provider.payrollAdminTotal | currency:'':0}}</span>
+						<span ng-if="!provider.payrollAdminTotal">-</span>
+					</td>
+					<td>
+						<span ng-if="provider.labourCostTotal">{{provider.labourCostTotal | currency:'':0}}</span>
+						<span ng-if="!provider.labourCostTotal">-</span>
+					</td>
+					<td class="percentage">{{provider.workForcePercent | percentage}}</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </div>

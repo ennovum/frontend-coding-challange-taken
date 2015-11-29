@@ -7,9 +7,11 @@ Labour Analysis main controller
 ******************************************************************************************/
 
 require("./labourcost-controller.js");
+require("./labourcost-service.js");
 
-var app = angular.module("reports.controllers", [
-	"labourcost.controller"
+var app = angular.module("reports", [
+	"labourcost.controller",
+	"labourcost.service"
 ]);
 
 app.config(["$routeProvider", function($routeProvider) {
@@ -25,7 +27,7 @@ app.run(["$rootScope", "appsections", "navigation", function($rootScope, $appsec
 		app: "report-labour-cost",
 		accesslist: [ "reports" ]
 	});
-	
+
 	$navigation.add({
 		reports: {
 			pagetitle: "Reports",

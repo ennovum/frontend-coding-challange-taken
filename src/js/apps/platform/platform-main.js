@@ -28,7 +28,7 @@ var app = angular.module("alcPlatform", [
 	"navigation.directives",
 	"navigation.controllers",
 	"navigation.services",
-	"reports.controllers"
+	"reports"
 ]);
 
 app.config(["$routeProvider", function($routeProvider) {
@@ -40,22 +40,22 @@ app.run(["$rootScope", "$document", "$location", "$http", "$timeout", "config", 
 	// Basic config options
 	var gulpBuildVersion = {};
 	$rootScope.config = angular.extend({ angular: angular.version.full, jquery: $.fn.jquery }, gulpBuildVersion);
-	
+
 	// Headings used by the menu bars
 	$rootScope.mainTitle = "";
 	$rootScope.mainHeading = "";
-	
+
 	// Sections of content are used for bookmark navigation
 	$rootScope.contentSections = [];
-	
+
 	// Make the config available to all controllers
 	$rootScope.config = angular.extend($rootScope.config, $config);
-	
+
 	// Info about the current logged in user
 	$rootScope.currentUser = {
 		person: {
 			id: 12345, personDetails: [
-				{ 
+				{
 					firstname: "Test",
 					surname: "User"
 				}
@@ -71,7 +71,7 @@ app.run(["$rootScope", "$document", "$location", "$http", "$timeout", "config", 
 			reports: ["*"]
 		}
 	};
-	
+
 	// Set the page title
 	$document[0].title = $config.titles.unauthed;
 
