@@ -13,20 +13,80 @@
 		<table class="matrix-table">
 			<thead>
 				<tr>
-					<th>Payroll Provider</th>
-					<th>Worker</th>
-					<th>Compliance Score</th>
-					<th>Gross Pay (&pound;)</th>
-					<th>Payroll Admin (&pound;)</th>
-					<th>Labour Cost (&pound;)</th>
-					<th>Work-force</th>
+					<th ng-click="toggleSort('name', 'asc')">
+						<span>Payroll Provider</span>
+						<span class="" ng-if="isSortBy('name', 'asc')">&and;</span>
+						<span class="" ng-if="isSortBy('name', 'desc')">&or;</span>
+					</th>
+					<th ng-click="toggleSort('workerCount', 'desc')">
+						<span>Worker</span>
+						<span class="" ng-if="isSortBy('workerCount', 'asc')">&and;</span>
+						<span class="" ng-if="isSortBy('workerCount', 'desc')">&or;</span>
+					</th>
+					<th ng-click="toggleSort('compliancePercent', 'desc')">
+						<span>Compliance Score</span>
+						<span class="" ng-if="isSortBy('compliancePercent', 'asc')">&and;</span>
+						<span class="" ng-if="isSortBy('compliancePercent', 'desc')">&or;</span>
+					</th>
+					<th ng-click="toggleSort('grossPayTotal', 'desc')">
+						<span>Gross Pay (&pound;)</span>
+						<span class="" ng-if="isSortBy('grossPayTotal', 'asc')">&and;</span>
+						<span class="" ng-if="isSortBy('grossPayTotal', 'desc')">&or;</span>
+					</th>
+					<th ng-click="toggleSort('payrollAdminTotal', 'desc')">
+						<span>Payroll Admin (&pound;)</span>
+						<span class="" ng-if="isSortBy('payrollAdminTotal', 'asc')">&and;</span>
+						<span class="" ng-if="isSortBy('payrollAdminTotal', 'desc')">&or;</span>
+					</th>
+					<th ng-click="toggleSort('labourCostTotal', 'desc')">
+						<span>Labour Cost (&pound;)</span>
+						<span class="" ng-if="isSortBy('labourCostTotal', 'asc')">&and;</span>
+						<span class="" ng-if="isSortBy('labourCostTotal', 'desc')">&or;</span>
+					</th>
+					<th ng-click="toggleSort('workForcePercent', 'desc')">
+						<span>Work-force</span>
+						<span class="" ng-if="isSortBy('workForcePercent', 'asc')">&and;</span>
+						<span class="" ng-if="isSortBy('workForcePercent', 'desc')">&or;</span>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="provider in costReport.providers">
-					<th class="minor">{{provider.name}}</th>
-					<td>{{provider.workerCount}}</td>
-					<td class="percentage">{{provider.compliancePercent | percentage}}</td>
+				<tr class="gap" ng-if="costDirectContractors">
+					<th class="minor">
+						<span>{{costDirectContractors.name}}</span>
+					</th>
+					<td>
+						<span>{{costDirectContractors.workerCount}}</span>
+					</td>
+					<td class="percentage">
+						<span>{{costDirectContractors.compliancePercent | percentage}}</span>
+					</td>
+					<td>
+						<span ng-if="costDirectContractors.grossPayTotal">{{costDirectContractors.grossPayTotal | currency:'':0}}</span>
+						<span ng-if="!costDirectContractors.grossPayTotal">-</span>
+					</td>
+					<td>
+						<span ng-if="costDirectContractors.payrollAdminTotal">{{costDirectContractors.payrollAdminTotal | currency:'':0}}</span>
+						<span ng-if="!costDirectContractors.payrollAdminTotal">-</span>
+					</td>
+					<td>
+						<span ng-if="costDirectContractors.labourCostTotal">{{costDirectContractors.labourCostTotal | currency:'':0}}</span>
+						<span ng-if="!costDirectContractors.labourCostTotal">-</span>
+					</td>
+					<td class="percentage">
+						<span>{{costDirectContractors.workForcePercent | percentage}}</span>
+					</td>
+				</tr>
+				<tr ng-class="{'gap': !$index}" ng-repeat="provider in costProviders track by $index">
+					<th class="minor">
+						<span>{{provider.name}}</span>
+					</th>
+					<td>
+						<span>{{provider.workerCount}}</span>
+					</td>
+					<td class="percentage">
+						<span>{{provider.compliancePercent | percentage}}</span>
+					</td>
 					<td>
 						<span ng-if="provider.grossPayTotal">{{provider.grossPayTotal | currency:'':0}}</span>
 						<span ng-if="!provider.grossPayTotal">-</span>
@@ -39,7 +99,35 @@
 						<span ng-if="provider.labourCostTotal">{{provider.labourCostTotal | currency:'':0}}</span>
 						<span ng-if="!provider.labourCostTotal">-</span>
 					</td>
-					<td class="percentage">{{provider.workForcePercent | percentage}}</td>
+					<td class="percentage">
+						<span>{{provider.workForcePercent | percentage}}</span>
+					</td>
+				</tr>
+				<tr class="gap totals">
+					<th class="minor">
+						<span>{{costTotal.name}}</span>
+					</th>
+					<td>
+						<span>{{costTotal.workerCount}}</span>
+					</td>
+					<td class="percentage">
+						<span>{{costTotal.compliancePercent | percentage}}</span>
+					</td>
+					<td>
+						<span ng-if="costTotal.grossPayTotal">{{costTotal.grossPayTotal | currency:'':0}}</span>
+						<span ng-if="!costTotal.grossPayTotal">-</span>
+					</td>
+					<td>
+						<span ng-if="costTotal.payrollAdminTotal">{{costTotal.payrollAdminTotal | currency:'':0}}</span>
+						<span ng-if="!costTotal.payrollAdminTotal">-</span>
+					</td>
+					<td>
+						<span ng-if="costTotal.labourCostTotal">{{costTotal.labourCostTotal | currency:'':0}}</span>
+						<span ng-if="!costTotal.labourCostTotal">-</span>
+					</td>
+					<td class="percentage">
+						<span>{{costTotal.workForcePercent | percentage}}</span>
+					</td>
 				</tr>
 			</tbody>
 		</table>

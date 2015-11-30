@@ -54,6 +54,7 @@ app.factory("labourcost", ["$rootScope", "$q", "restalchemy", function LabourCos
         });
 
         costReport.directContractors = {
+            name: costDirectContractors.name,
             workerCount: costDirectContractors.workerCount || 0,
             compliancePercent: costDirectContractors.complianceStats && costDirectContractors.complianceStats.Total || 0,
             grossPayTotal: costDirectContractors.grossPayTotal || 0,
