@@ -34,11 +34,13 @@ app.factory("labourcost", ["$rootScope", "$q", "restalchemy", function LabourCos
         var costDirectContractors = cost.directContractors[0];
 
         costReport.total = {
+            name: costTotal.name,
             workerCount: costTotal.workerCount || 0,
             compliancePercent: costTotal.complianceStats && costTotal.complianceStats.Total || 0,
             grossPayTotal: costTotal.grossPayTotal || 0,
             payrollAdminTotal: costTotal.payrollAdminTotal || 0,
-            labourCostTotal: costTotal.labourCostTotal || 0
+            labourCostTotal: costTotal.labourCostTotal || 0,
+            workForcePercent: 100
         };
 
         costReport.providers = cost.providers.map(function (provider) {
@@ -49,7 +51,7 @@ app.factory("labourcost", ["$rootScope", "$q", "restalchemy", function LabourCos
                 grossPayTotal: provider.grossPayTotal || 0,
                 payrollAdminTotal: provider.payrollAdminTotal || 0,
                 labourCostTotal: provider.labourCostTotal || 0,
-                workForcePercent: costReport.total.labourCostTotal && provider.labourCostTotal / costReport.total.labourCostTotal * 100 || 0
+                workForcePercent: costReport.total.labourCostTotal && (provider.labourCostTotal / costReport.total.labourCostTotal * 100) || 0
             };
         });
 
@@ -60,7 +62,7 @@ app.factory("labourcost", ["$rootScope", "$q", "restalchemy", function LabourCos
             grossPayTotal: costDirectContractors.grossPayTotal || 0,
             payrollAdminTotal: costDirectContractors.payrollAdminTotal || 0,
             labourCostTotal: costDirectContractors.labourCostTotal || 0,
-            workForcePercent: costReport.total.labourCostTotal && costDirectContractors.labourCostTotal / costReport.total.labourCostTotal * 100 || 0
+            workForcePercent: costReport.total.labourCostTotal && (costDirectContractors.labourCostTotal / costReport.total.labourCostTotal * 100) || 0
         };
 
         return costReport;
