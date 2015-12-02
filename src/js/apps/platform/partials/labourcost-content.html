@@ -1,50 +1,50 @@
 <div ng-controller="ctrlLabourCost">
 	<h2>Labour cost report</h2>
 
-	<div class="">
+	<div class="" ng-if="costProviders">
 		<table class="matrix-table reports-table">
 			<thead>
 				<tr>
-					<th class="volume toggle" ng-class="{'sorted': isSortBy('name')}" ng-click="toggleSort('name', 'asc')">
+					<th class="volume toggle" ng-class="{'sorted': isSortBy('name')}" ng-click="toggleSort('name', false)">
 						<span>Payroll Provider</span>
-						<i class="icon small sort chevron-up" ng-if="isSortBy('name', 'asc')"></i>
-						<i class="icon small sort chevron-down" ng-if="isSortBy('name', 'desc')"></i>
+						<i class="icon small sort chevron-up" ng-if="isSortBy('name', false)"></i>
+						<i class="icon small sort chevron-down" ng-if="isSortBy('name', true)"></i>
 					</th>
-					<th class="volume toggle" ng-class="{'sorted': isSortBy('workerCount')}" ng-click="toggleSort('workerCount', 'desc')">
+					<th class="volume toggle" ng-class="{'sorted': isSortBy('workerCount')}" ng-click="toggleSort('workerCount', true)">
 						<span>Worker</span>
-						<i class="icon small sort chevron-up" ng-if="isSortBy('workerCount', 'asc')"></i>
-						<i class="icon small sort chevron-down" ng-if="isSortBy('workerCount', 'desc')"></i>
+						<i class="icon small sort chevron-up" ng-if="isSortBy('workerCount', false)"></i>
+						<i class="icon small sort chevron-down" ng-if="isSortBy('workerCount', true)"></i>
 					</th>
-					<th class="percentage toggle" ng-class="{'sorted': isSortBy('compliancePercent')}" ng-click="toggleSort('compliancePercent', 'desc')">
+					<th class="percentage toggle" ng-class="{'sorted': isSortBy('compliancePercent')}" ng-click="toggleSort('compliancePercent', true)">
 						<span>Compliance Score</span>
-						<i class="icon small sort chevron-up" ng-if="isSortBy('compliancePercent', 'asc')"></i>
-						<i class="icon small sort chevron-down" ng-if="isSortBy('compliancePercent', 'desc')"></i>
+						<i class="icon small sort chevron-up" ng-if="isSortBy('compliancePercent', false)"></i>
+						<i class="icon small sort chevron-down" ng-if="isSortBy('compliancePercent', true)"></i>
 					</th>
 					<th class=""></th>
-					<th class="currency toggle" ng-class="{'sorted': isSortBy('grossPayTotal')}" ng-click="toggleSort('grossPayTotal', 'desc')">
+					<th class="currency toggle" ng-class="{'sorted': isSortBy('grossPayTotal')}" ng-click="toggleSort('grossPayTotal', true)">
 						<span>Gross Pay (&pound;)</span>
-						<i class="icon small sort chevron-up" ng-if="isSortBy('grossPayTotal', 'asc')"></i>
-						<i class="icon small sort chevron-down" ng-if="isSortBy('grossPayTotal', 'desc')"></i>
+						<i class="icon small sort chevron-up" ng-if="isSortBy('grossPayTotal', false)"></i>
+						<i class="icon small sort chevron-down" ng-if="isSortBy('grossPayTotal', true)"></i>
 					</th>
-					<th class="currency toggle" ng-class="{'sorted': isSortBy('payrollAdminTotal')}" ng-click="toggleSort('payrollAdminTotal', 'desc')">
+					<th class="currency toggle" ng-class="{'sorted': isSortBy('payrollAdminTotal')}" ng-click="toggleSort('payrollAdminTotal', true)">
 						<span>Payroll Admin (&pound;)</span>
-						<i class="icon small sort chevron-up" ng-if="isSortBy('payrollAdminTotal', 'asc')"></i>
-						<i class="icon small sort chevron-down" ng-if="isSortBy('payrollAdminTotal', 'desc')"></i>
+						<i class="icon small sort chevron-up" ng-if="isSortBy('payrollAdminTotal', false)"></i>
+						<i class="icon small sort chevron-down" ng-if="isSortBy('payrollAdminTotal', true)"></i>
 					</th>
-					<th class="currency toggle" ng-class="{'sorted': isSortBy('labourCostTotal')}" ng-click="toggleSort('labourCostTotal', 'desc')">
+					<th class="currency toggle" ng-class="{'sorted': isSortBy('labourCostTotal')}" ng-click="toggleSort('labourCostTotal', true)">
 						<span>Labour Cost (&pound;)</span>
-						<i class="icon small sort chevron-up" ng-if="isSortBy('labourCostTotal', 'asc')"></i>
-						<i class="icon small sort chevron-down" ng-if="isSortBy('labourCostTotal', 'desc')"></i>
+						<i class="icon small sort chevron-up" ng-if="isSortBy('labourCostTotal', false)"></i>
+						<i class="icon small sort chevron-down" ng-if="isSortBy('labourCostTotal', true)"></i>
 					</th>
 					<th class=""></th>
-					<th class="percentage toggle" ng-class="{'sorted': isSortBy('workForcePercent')}" ng-click="toggleSort('workForcePercent', 'desc')">
+					<th class="percentage toggle" ng-class="{'sorted': isSortBy('workForcePercent')}" ng-click="toggleSort('workForcePercent', true)">
 						<span>Work-force</span>
-						<i class="icon small sort chevron-up" ng-if="isSortBy('workForcePercent', 'asc')"></i>
-						<i class="icon small sort chevron-down" ng-if="isSortBy('workForcePercent', 'desc')"></i>
+						<i class="icon small sort chevron-up" ng-if="isSortBy('workForcePercent', false)"></i>
+						<i class="icon small sort chevron-down" ng-if="isSortBy('workForcePercent', true)"></i>
 					</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody sortimate="[costProviders, sortField, sortReverse]">
 				<tr class="gap" ng-if="costDirectContractors">
 					<td colspan="9"></td>
 				</tr>
@@ -79,7 +79,7 @@
 				<tr class="gap">
 					<td colspan="9"></td>
 				</tr>
-				<tr class="" ng-repeat="provider in costProviders track by $index">
+				<tr class="sortimatable" ng-repeat="provider in costProviders | orderBy:sortField:sortReverse">
 					<th class="minor volume" ng-class="{'sorted': isSortBy('name')}">
 						<span>{{provider.name}}</span>
 					</th>

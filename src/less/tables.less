@@ -132,7 +132,7 @@ div.box-popup {
 }
 
 table.matrix-table {
-	margin: 0 0 50px;
+	margin: 0 -5px 50px -5px;
 
 	&.fullwidth {
 		width: 100%;
@@ -176,7 +176,6 @@ table.matrix-table {
 
 			&.gap {
 				td, th {
-					height: 0;
 					padding-top: 40px;
 				}
 			}
@@ -190,17 +189,14 @@ table.matrix-table {
 			}
 
 			&.volume {
-				padding-right: 10px;
 				text-align: left;
 			}
 
 			&.currency {
-				padding-left: 10px;
 				text-align: right;
 			}
 
 			&.percentage {
-				padding-right: 10px;
 				text-align: left;
 			}
 
@@ -216,7 +212,6 @@ table.matrix-table {
 				position: relative;
 				overflow: hidden;
 				width: 30px;
-				padding-left: 10px;
 
 				&:before {
 					position: absolute;
@@ -280,12 +275,14 @@ table.matrix-table {
 	thead {
 		td, th {
 			height: 36px;
+			padding: 0 5px;
 		}
 	}
 
 	tbody, tfoot {
 		td, th {
 			height: 31px;
+			padding: 0 5px;
 		}
 	}
 
@@ -334,9 +331,14 @@ table.reports-table {
 		tr {
 			&.gap {
 				td, th {
-					height: 0;
 					padding-top: 20px;
 				}
+			}
+		}
+
+		td, th {
+			&.sorted {
+				background-color: @pale-bright-grey-color;
 			}
 		}
 	}
@@ -344,7 +346,7 @@ table.reports-table {
 	thead {
 		td, th {
 			height: auto;
-			padding: 10px 0;
+			padding: 10px 5px;
 			vertical-align: top;
 		}
 	}
@@ -356,7 +358,7 @@ table.reports-table {
 
 		td, th {
 			height: auto;
-			padding: 10px 0;
+			padding: 10px 5px;
 		}
 	}
 }

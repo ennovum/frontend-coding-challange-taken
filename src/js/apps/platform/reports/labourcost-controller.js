@@ -7,7 +7,7 @@ Labour Cost Report controller
 ******************************************************************************************/
 
 var SORT_FIELD_DEFAULT = "name";
-var SORT_DIRECTION_DEFAULT = "asc";
+var SORT_REVERSE_DEFAULT = false;
 
 var app = angular.module("labourcost.controller", [
 	"labourcost.service"
@@ -29,8 +29,8 @@ app.controller("ctrlLabourCost", ["$rootScope", "$scope", "$filter", "navigation
     $scope.costProviders = null;
     $scope.costDirectContractors = null;
 
-    this.sortField = SORT_FIELD_DEFAULT;
-    this.sortDirection = SORT_DIRECTION_DEFAULT;
+    $scope.sortField = SORT_FIELD_DEFAULT;
+    $scope.sortReverse = SORT_REVERSE_DEFAULT;
 
     this.setData = function (costReport) {
         this.costReport = costReport;
@@ -42,13 +42,13 @@ app.controller("ctrlLabourCost", ["$rootScope", "$scope", "$filter", "navigation
         this.applySort();
     }.bind(this);
 
-    $scope.toggleSort = function (field, direction) {
-        if (field === this.sortField) {
-            this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+    $scope.toggleSort = function (field, reverse) {
+        if (field === $scope.sortField) {
+            $scope.sortReverse = !$scope.sortReverse;
         }
         else {
-            this.sortField = field;
-            this.sortDirection = direction;
+            $scope.sortField = field;
+            $scope.sortReverse = reverse;
         }
 
         this.applySort();
@@ -57,19 +57,18 @@ app.controller("ctrlLabourCost", ["$rootScope", "$scope", "$filter", "navigation
     this.applySort = function () {
         var costProviders = this.costReport.providers;
         var costDirectContractors = this.costReport.directContractors;
-        var costTotal = this.costReport.total;
 
-        if (this.sortField !== "name") {
+        if ($scope.sortField !== "name") {
             costProviders = costProviders.concat(costDirectContractors);
             costDirectContractors = null;
         }
 
-        $scope.costProviders = $filter("orderBy")(costProviders, this.sortField, this.sortDirection !== SORT_DIRECTION_DEFAULT);
+        $scope.costProviders = costProviders;
         $scope.costDirectContractors = costDirectContractors;
-        $scope.costTotal = costTotal;
+        $scope.costTotal = this.costReport.total;
     }
 
-    $scope.isSortBy = function (field, direction) {
-        return field === this.sortField && (direction ? direction === this.sortDirection : true);
+    $scope.isSortBy = function (field, reverse) {
+        return field === $scope.sortField && (reverse === undefined ? true : reverse === $scope.sortReverse);
     }.bind(this);
 }]);
